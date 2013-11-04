@@ -5,14 +5,14 @@ help navigate through it.
 
 ** Installation
 *** Via Marmalade/Melpa
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC elisp
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
-#+END_EXAMPLE
+#+END_SRC
 
 Then you can install it:
 
@@ -25,10 +25,10 @@ M-x package-install RET immutant-server RET
 Download the source or clone the repo and add the following 
 to ~/.emacs.d/init.el:
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC elisp
 (add-to-list 'load-path "path/to/immutant-server.el")
 (require 'immutant-server)
-#+END_EXAMPLE
+#+END_SRC
 
 ** Usage Example
 
