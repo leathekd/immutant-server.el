@@ -77,7 +77,8 @@ Filled in by `immutant-server-update-mode-line'")
   "Divider characters to print when Immutant starts or stops.")
 
 (defgroup immutant-server nil
-  "Immutant-server mode properties")
+  "Immutant-server mode properties"
+  :group 'external)
 
 (defgroup immutant-server-faces nil
   "Immutant-server mode faces"
@@ -291,14 +292,14 @@ output there."
   (end-of-line)
   (if (search-forward-regexp immutant-server-log-line-regexp nil t)
       (beginning-of-line)
-    (next-line)))
+    (forward-line)))
 
 (defun immutant-server-previous-line ()
   "Move the point to the beginning of the previous log line"
   (interactive)
   (if (search-backward-regexp immutant-server-log-line-regexp nil t)
       (beginning-of-line)
-    (previous-line)))
+    (forward-line -1)))
 
 (defun immutant-server-next-error ()
   "Move the point to the beginning of the next line containing
