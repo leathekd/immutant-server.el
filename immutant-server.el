@@ -1,10 +1,10 @@
 ;;; immutant-server.el --- Run your Immutant server in Emacs
 ;;
-;; Copyright (c) 2013 David Leatherman
+;; Copyright (c) 2013-2014 David Leatherman
 ;;
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/immutant-server.el
-;; Version: 1.0.0
+;; Version: 1.0.1
 
 ;; This file is not part of GNU Emacs.
 
@@ -20,6 +20,12 @@
 ;; M-x immutant-server-start
 
 ;; History
+
+;; 1.0.1
+;;
+;; - Fixed some byte compile warnings
+;;
+;; - Added an autoload to immutant-server-start
 
 ;; 1.0.0
 ;;
