@@ -249,6 +249,7 @@ buffer and mode line appropriately."
       (pop-to-buffer immutant-server-buffer)
     (error "The immutant-server-buffer does not exist.")))
 
+;;;###autoload
 (defun immutant-server-start ()
   "Start Immutant, pop to the `immutant-server-buffer' and print the
 output there."
