@@ -32,6 +32,8 @@
 ;;
 ;; - Tweaked faces (removed bold on inherited faces), change info
 ;;   color
+;;
+;; - Fix bug in error navigation
 
 
 ;; 1.0.1
@@ -350,9 +352,13 @@ output there."
   "Move the point to the beginning of the next line containing
 `immutant-server-error-regexp'"
   (interactive)
-  (if (search-forward-regexp immutant-server-error-regexp nil t)
-      (beginning-of-line)
-    (error "No more ERROR messages")))
+  (let ((pt (point)))
+    (end-of-line)
+    (if (search-forward-regexp immutant-server-error-regexp nil t)
+        (beginning-of-line)
+      (progn
+        (goto-char pt)
+        (error "No more ERROR messages")))))
 
 (defun immutant-server-previous-error ()
   "Move the point to the beginning of the previous line containing
