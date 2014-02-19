@@ -34,7 +34,8 @@
 ;;   color
 ;;
 ;; - Fix bug in error navigation
-
+;;
+;; - Add C-c C-s keybinding to start Immutant
 
 ;; 1.0.1
 ;;
@@ -390,6 +391,7 @@ output there."
     (define-key map "t" 'toggle-truncate-lines)
     (define-key map "q" 'immutant-server-quit-buffer)
     (define-key map (kbd "C-c C-c") 'immutant-server-stop)
+    (define-key map (kbd "C-c C-s") 'immutant-server-start)
     map)
   "Keymap for \"immutant-server\" buffers.")
 
