@@ -26,6 +26,10 @@
 ;; - Added highlighting for various specific log messages. Initially,
 ;;   these are all about when the server is up or services deployed.
 ;;   See `immutant-server-notice-regexp-alist' for details.
+;;
+;; - Fixed a bug with the Immutant Stopped message appearing
+;;   off-screen.
+
 ;; 1.0.1
 ;;
 ;; - Fixed some byte compile warnings
@@ -228,39 +232,42 @@ region"
   (let ((search-upper-case t))
     (count-matches immutant-server-error-regexp start end)))
 
+(defun immutant-server-insert-text (text)
+  (with-current-buffer immutant-server-buffer
+    (let ((at-bottom (equal (point-max) (point)))
+          (buffer immutant-server-buffer)
+          (inhibit-read-only t))
+      (save-excursion
+        (goto-char (point-max))
+        (let ((pt (point)))
+          (insert text)
+          ;; get to the beginning of the line
+          (ansi-color-filter-region pt (point-max))
+          (goto-char pt)
+          (unless (equal pt (line-beginning-position))
+            (goto-char (line-beginning-position)))
+          ;; Do all the things to make the output and mode line
+          ;; pretty
+          (let ((start (point))
+                (end (point-max)))
+            (immutant-server-add-faces start end)
+            (setq immutant-server-error-count
+                  (immutant-server-count-errors-in-region start end)))
+          (immutant-server-update-mode-line)))
+      (when at-bottom
+        (goto-char (point-max))
+        (when (get-buffer-window immutant-server-buffer 'visible)
+          (with-selected-window
+              (get-buffer-window immutant-server-buffer 'visible)
+            (recenter -1)))))))
+
 (defun immutant-server-proc-filter (proc output)
   "Process filter that will print and colorize the output of the
 Immutant process.  It is also responsible for keeping the error count
 up to date as well as keeping the point at the bottom (if it was
 already at the bottom)."
   (when (buffer-live-p (process-buffer proc))
-    (with-current-buffer immutant-server-buffer
-      (let ((at-bottom (equal (point-max) (point)))
-            (buffer immutant-server-buffer)
-            (inhibit-read-only t))
-        (save-excursion
-          (goto-char (point-max))
-          (let ((pt (point)))
-            (insert output)
-            ;; get to the beginning of the line
-            (ansi-color-filter-region pt (point-max))
-            (goto-char pt)
-            (unless (equal pt (line-beginning-position))
-              (goto-char (line-beginning-position)))
-            ;; Do all the things to make the output and mode line
-            ;; pretty
-            (let ((start (point))
-                  (end (point-max)))
-              (immutant-server-add-faces start end)
-              (setq immutant-server-error-count
-                    (immutant-server-count-errors-in-region start end)))
-            (immutant-server-update-mode-line)))
-        (when at-bottom
-          (goto-char (point-max))
-          (when (get-buffer-window immutant-server-buffer 'visible)
-            (with-selected-window
-                (get-buffer-window immutant-server-buffer 'visible)
-              (recenter -1))))))))
+    (immutant-server-insert-text output)))
 
 (defun immutant-server-sentinel (proc string)
   "Process sentinel that watches for Immutant to stop and updates the
@@ -269,11 +276,8 @@ buffer and mode line appropriately."
     (with-current-buffer (process-buffer proc)
       (when (string-match "^\\(finished\\|exited\\|interrupt\\)" string)
         (immutant-server-update-mode-line)
-        (let ((inhibit-read-only t))
-          (save-excursion
-            (goto-char (point-max))
-            (insert "\nImmutant Stopped")
-            (insert immutant-server-output-divider)))
+        (immutant-server-insert-text (concat "\nImmutant Stopped"
+                                             immutant-server-output-divider))
         (message "Immutant stopped")))))
 
  ;; Interactive functions
