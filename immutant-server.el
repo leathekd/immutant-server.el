@@ -21,6 +21,11 @@
 
 ;; History
 
+;; 1.1.1
+;;
+;; - Added highlighting for various specific log messages. Initially,
+;;   these are all about when the server is up or services deployed.
+;;   See `immutant-server-notice-regexp-alist' for details.
 ;; 1.0.1
 ;;
 ;; - Fixed some byte compile warnings
@@ -70,6 +75,13 @@ Filled in by `immutant-server-update-mode-line'")
     ("ERROR" . immutant-server-error-face)
     ("FATAL" . immutant-server-fatal-face))
   "An alist of all of the log levels to their associated faces")
+
+(defvar immutant-server-notice-regexp-alist
+  '(("Started [[:digit:]]+ of [[:digit:]]+ servi" . immutant-server-notice-face)
+    ("stopped in [[:digit:]]+ms" . immutant-server-notice-face)
+    ("Starting deployment.*runtime-name" . immutant-server-notice-face)
+    ("Deployed.*runtime-name" . immutant-server-notice-face))
+  "An alist of various other lines worth highlighting.")
 
 (defvar immutant-server-error-regexp " ERROR \\| FATAL "
   "Regexp used to count errors and to navigate between them.")
@@ -125,6 +137,13 @@ Filled in by `immutant-server-update-mode-line'")
   "Face to use for TRACE messages"
   :group 'immutant-server-faces)
 
+(defface immutant-server-notice-face
+  '((((background light)) (:foreground "DeepSkyBlue"))
+    (((background dark)) (:foreground "DeepSkyBlue")))
+  "Face to use for lines matching the regexps in the default
+`immutant-server-notice-regexp-alist'"
+  :group 'immutant-server-faces)
+
  ;; User customizable settings
 
 (defcustom immutant-server-bury-on-quit t
@@ -175,22 +194,33 @@ error count"
 (defun immutant-server-add-faces (start end)
   "Colorize all of the lines in the region based on the levels for
 each log message."
-  (goto-char start)
-  (immutant-server-previous-line)
-  (let ((case-fold-search nil)
-        level previous-point)
-    (while (search-forward-regexp immutant-server-log-line-regexp
-                                  (point-max) t)
-      (unless (null level)
-        (immutant-server-add-face-to-region previous-point
-                                            (line-beginning-position)
-                                            level))
-      (setq level (word-at-point))
-      (setq previous-point (line-beginning-position)))
-    (unless (null level)
-      (immutant-server-add-face-to-region previous-point
-                                          (point-max)
-                                          level))))
+  (save-match-data
+    (save-restriction
+      (goto-char start)
+      (immutant-server-previous-line)
+      (immutant-server-previous-line)
+      (narrow-to-region (point) (point-max))
+
+      (let ((case-fold-search nil)
+            level previous-point)
+        (while (search-forward-regexp immutant-server-log-line-regexp
+                                      nil t)
+          (unless (null level)
+            (immutant-server-add-face-to-region previous-point
+                                                (line-beginning-position)
+                                                level))
+          (setq level (word-at-point))
+          (setq previous-point (line-beginning-position)))
+        (unless (null level)
+          (immutant-server-add-face-to-region previous-point
+                                              (point-max)
+                                              level))
+        ;; colorize special notice lines
+        (dolist (pair immutant-server-notice-regexp-alist)
+          (goto-char (point-min))
+          (while (search-forward-regexp (car pair) (point-max) t)
+            (add-text-properties (point-at-bol) (point-at-eol)
+                                 `(face ,(cdr pair)))))))))
 
 (defun immutant-server-count-errors-in-region (start end)
   "Count the instances of `immutant-server-error-regexp' in the
