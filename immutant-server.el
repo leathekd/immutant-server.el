@@ -29,6 +29,10 @@
 ;;
 ;; - Fixed a bug with the Immutant Stopped message appearing
 ;;   off-screen.
+;;
+;; - Tweaked faces (removed bold on inherited faces), change info
+;;   color
+
 
 ;; 1.0.1
 ;;
@@ -114,18 +118,18 @@ Filled in by `immutant-server-update-mode-line'")
   :group 'immutant-server-faces)
 
 (defface immutant-server-error-face
-  '((t :inherit 'error))
+  '((t :inherit 'error :weight normal))
   "Face to use for ERROR messages"
   :group 'immutant-server-faces)
 
 (defface immutant-server-warn-face
-  '((t :inherit 'warning))
+  '((t :inherit 'warning :weight normal))
   "Face to use for WARN messages"
   :group 'immutant-server-faces)
 
 (defface immutant-server-info-face
   '((((background light)) (:foreground "DimGray"))
-    (((background dark)) (:foreground "DimGray")))
+    (((background dark)) (:foreground "gray")))
   "Face to use for INFO messages"
   :group 'immutant-server-faces)
 
