@@ -4,7 +4,7 @@
 ;;
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/immutant-server.el
-;; Version: 1.1.1
+;; Version: 1.1.2
 
 ;; This file is not part of GNU Emacs.
 
@@ -20,6 +20,10 @@
 ;; M-x immutant-server-start
 
 ;; History
+
+;; 1.1.2
+;;
+;; - Require ansi-color
 
 ;; 1.1.1
 ;;
@@ -65,6 +69,10 @@
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Code:
+
+ ;; Required libs
+
+(require 'ansi-color)
 
  ;; Internal vars
 
