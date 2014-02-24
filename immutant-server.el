@@ -177,7 +177,7 @@ t to bury, nil to kill."
   :type 'boolean)
 
 (defcustom immutant-server-executable
-  (expand-file-name "~/.immutant/current/jboss/bin/standalone.sh")
+  "~/.immutant/current/jboss/bin/standalone.sh"
   "Command to run to start Immutant.
 Defaults to ~/.immutant/current/jboss/bin/standalone.sh"
   :group 'immutant-server
@@ -305,10 +305,10 @@ buffer and mode line appropriately."
     (error "The immutant-server-buffer does not exist.")))
 
 ;;;###autoload
-(defun immutant-server-start ()
+(defun immutant-server-start (arg)
   "Start Immutant, pop to the `immutant-server-buffer' and print the
 output there."
-  (interactive)
+  (interactive "P")
   (if (immutant-server-running-p)
       (error "Immutant is already running.")
     (let ((buffer (get-buffer-create immutant-server-buffer))
@@ -322,8 +322,14 @@ output there."
           (erase-buffer))
         (insert immutant-server-output-divider)
         (insert "Starting Immutant\n\n")
-        (let ((proc (start-process-shell-command
-                     "immutant" buffer immutant-server-executable)))
+        (let* ((cmd (if arg
+                        (read-from-minibuffer
+                         "Immutant server command: "
+                         immutant-server-executable nil nil
+                         'immutant-server-executable-history)
+                      immutant-server-executable))
+               (proc (start-process-shell-command
+                      "immutant" buffer (expand-file-name cmd))))
           (set-process-filter proc 'immutant-server-proc-filter)
           (set-process-sentinel proc 'immutant-server-sentinel))
         (message "Immutant started")
