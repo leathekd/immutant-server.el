@@ -99,7 +99,14 @@ Filled in by `immutant-server-update-mode-line'")
   '(("Started [[:digit:]]+ of [[:digit:]]+ servi" . immutant-server-notice-face)
     ("stopped in [[:digit:]]+ms" . immutant-server-notice-face)
     ("Starting deployment.*runtime-name" . immutant-server-notice-face)
-    ("Deployed.*runtime-name" . immutant-server-notice-face))
+    ("Deployed.*runtime-name" . immutant-server-notice-face)
+    ("nREPL bound to" . immutant-server-notice-face)
+    ("\\[immutant.messaging.core].*\\(Starting\\|Stopping\\|already exists\\)" .
+     immutant-server-notice-face)
+    ("\\(Uns\\|S\\)cheduling job" . immutant-server-notice-face)
+    ("Creating cache:" . immutant-server-notice-face)
+    ("St\\(art\\|opp\\)ing daemon:" . immutant-server-notice-face)
+    ("Creating.*listener for" . immutant-server-notice-face))
   "An alist of various other lines worth highlighting.")
 
 (defvar immutant-server-error-regexp " ERROR \\| FATAL "
