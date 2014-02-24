@@ -311,7 +311,13 @@ output there."
   (interactive "P")
   (if (immutant-server-running-p)
       (error "Immutant is already running.")
-    (let ((buffer (get-buffer-create immutant-server-buffer))
+    (let ((cmd (if arg
+                   (read-from-minibuffer
+                    "Immutant server command: "
+                    immutant-server-executable nil nil
+                    'immutant-server-executable-history)
+                 immutant-server-executable))
+          (buffer (get-buffer-create immutant-server-buffer))
           (inhibit-read-only t))
       (with-current-buffer buffer
         (unless (eq 'immutant-server-mode major-mode)
@@ -322,14 +328,8 @@ output there."
           (erase-buffer))
         (insert immutant-server-output-divider)
         (insert "Starting Immutant\n\n")
-        (let* ((cmd (if arg
-                        (read-from-minibuffer
-                         "Immutant server command: "
-                         immutant-server-executable nil nil
-                         'immutant-server-executable-history)
-                      immutant-server-executable))
-               (proc (start-process-shell-command
-                      "immutant" buffer (expand-file-name cmd))))
+        (let ((proc (start-process-shell-command
+                     "immutant" buffer (expand-file-name cmd))))
           (set-process-filter proc 'immutant-server-proc-filter)
           (set-process-sentinel proc 'immutant-server-sentinel))
         (message "Immutant started")
