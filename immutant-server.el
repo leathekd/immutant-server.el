@@ -73,6 +73,7 @@
  ;; Required libs
 
 (require 'ansi-color)
+(require 'thingatpt)
 
  ;; Internal vars
 
