@@ -97,7 +97,8 @@ Filled in by `immutant-server-update-mode-line'")
   "An alist of all of the log levels to their associated faces")
 
 (defvar immutant-server-notice-regexp-alist
-  '(("Started [[:digit:]]+ of [[:digit:]]+ servi" . immutant-server-notice-face)
+  '(("started in.*Started [[:digit:]]+ of [[:digit:]]+ servi" .
+     immutant-server-notice-face)
     ("stopped in [[:digit:]]+ms" . immutant-server-notice-face)
     ("Starting deployment.*runtime-name" . immutant-server-notice-face)
     ("Deployed.*runtime-name" . immutant-server-notice-face)
