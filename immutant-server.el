@@ -4,7 +4,7 @@
 ;;
 ;; Author: David Leatherman <leathekd@gmail.com>
 ;; URL: http://www.github.com/leathekd/immutant-server.el
-;; Version: 1.1.2
+;; Version: 1.2.0
 
 ;; This file is not part of GNU Emacs.
 
@@ -20,6 +20,21 @@
 ;; M-x immutant-server-start
 
 ;; History
+
+;; 1.2.0
+;;
+;; - Added additional notice regexes to
+;;   `immutant-server-notice-regexp-alist'. Thanks, tcrawley.
+;;
+;; - Added thingatpt require.  Thanks, syohex.
+;;
+;; - Added ability to modify server command in `immutant-server-start'
+;;   with C-u prefix.  Thanks, tcrawley.
+;;
+;; - Added docs for the 'C-c C-s' binding for `immutant-server-start'
+;;
+;; - Tweaked one of the notice regexes so it wouldn't override the
+;;   ERROR face when there is an error while starting Immutant.
 
 ;; 1.1.2
 ;;
