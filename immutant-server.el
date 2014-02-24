@@ -428,7 +428,9 @@ M-n      Move to the next error
 M-p      Move to the previous error
 t        Toggle line truncation
 q        Quit (kill or bury) the Immutant output buffer
-C-c C-c  Stop the Immutant process"
+C-c C-c  Stop the Immutant process
+C-c C-s  Start the Immutant process
+C-u C-c C-s Prompt for the server command before starting Immutant"
   (interactive)
   (kill-all-local-variables)
   (use-local-map immutant-server-mode-map)
