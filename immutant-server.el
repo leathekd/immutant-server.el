@@ -21,6 +21,10 @@
 
 ;; History
 
+;; 1.2.1
+;;
+;; - mark the immutant-server-start arg as optional
+
 ;; 1.2.0
 ;;
 ;; - Added additional notice regexes to
@@ -329,7 +333,7 @@ buffer and mode line appropriately."
     (error "The immutant-server-buffer does not exist.")))
 
 ;;;###autoload
-(defun immutant-server-start (arg)
+(defun immutant-server-start (&optional arg)
   "Start Immutant, pop to the `immutant-server-buffer' and print the
 output there."
   (interactive "P")
