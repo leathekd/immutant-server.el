@@ -23,7 +23,10 @@
 
 ;; 1.2.1
 ;;
-;; - mark the immutant-server-start arg as optional
+;; - Marked the immutant-server-start arg as optional
+;;
+;; - Added immutant-server-default-directory to control where Immutant
+;;   starts
 
 ;; 1.2.0
 ;;
@@ -98,6 +101,13 @@
 
 (defvar immutant-server-buffer "*immutant*"
   "The buffer in which the Immutant console output will be printed")
+
+(defvar immutant-server-default-directory
+  "~/.immutant/"
+  "The default buffer from which to launch Immutant.  This is
+useful to prevent Immutant from putting things like Infinispan
+cache files into whatever default-directory happens to be active
+when you run `immutant-server-start'.")
 
 (defvar immutant-server-error-count 0
   "An ongoing count of errors encoutered.  Printed in the mode line.")
@@ -332,6 +342,14 @@ buffer and mode line appropriately."
       (pop-to-buffer immutant-server-buffer)
     (error "The immutant-server-buffer does not exist.")))
 
+(defun immutant-server-set-default-directory ()
+  (when immutant-server-default-directory
+    (let ((dir (if (file-name-absolute-p immutant-server-default-directory)
+                   immutant-server-default-directory
+                 (expand-file-name immutant-server-default-directory))))
+      (make-directory dir t)
+      (setq default-directory dir))))
+
 ;;;###autoload
 (defun immutant-server-start (&optional arg)
   "Start Immutant, pop to the `immutant-server-buffer' and print the
@@ -350,6 +368,7 @@ output there."
       (with-current-buffer buffer
         (unless (eq 'immutant-server-mode major-mode)
           (immutant-server-mode))
+        (immutant-server-set-default-directory)
         (setq immutant-server-error-count 0)
         (immutant-server-update-mode-line)
         (when immutant-server-clear-output-on-start
