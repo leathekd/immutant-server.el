@@ -1,3 +1,7 @@
+*NO LONGER DEVELOPED*  It's been 10 years since the last commit here
+and 8 since the last commit to Immutant.  I think it's safe to say 
+that this library is no longer necessary.  :wave:
+
 * immutant-server.el
 immutant-server.el provides a way to run Immutant from within Emacs.
 It captures the console output, colorizes it, and offers some tools to
